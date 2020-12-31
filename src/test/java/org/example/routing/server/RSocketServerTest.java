@@ -17,12 +17,12 @@ public class RSocketServerTest {
                 buf,
                 new Data(buf.getMetadata(), "hello 🚗")
         ));
-        router.addMapping("goodbye.🐱", 1, buf -> Flux.just(
-                new Data(buf.getMetadata(), "2 🐱")
+        router.addMapping("ola 🥇", 1, buf -> Flux.just(
+                new Data(buf.getMetadata(), "2 🥇")
         ));
 
-        router.addMapping("goodbye.🐱", 2, buf -> Flux.just(
-                new Data(buf.getMetadata(), "3 🐱")
+        router.addMapping("ola 🥇", 2, buf -> Flux.just(
+                new Data(buf.getMetadata(), "3 🥇")
         ));
 
         sut = RSocketServer.builder()
@@ -49,13 +49,13 @@ public class RSocketServerTest {
     @Test
     @DisplayName("Test if matches function with higher predecence 😮")
     public void test_matches_collision() {
-        Data p = new Data("goodbye.🐱", "1");
+        Data p = new Data("ola 🥇", "1");
 
         Flux<io.rsocket.Payload> result = sut.router(Flux.just(Data.toRSocket(p)));
 
         result.map(Data::fromRSocket)
                 .as(StepVerifier::create)
-                .expectNext(new Data("goodbye.🐱", "3 🐱"))
+                .expectNext(new Data("ola 🥇", "3 🥇"))
                 .expectComplete();
     }
 
@@ -75,7 +75,7 @@ public class RSocketServerTest {
     @DisplayName("Acts as a flatMap 😮")
     public void test_multiple_messages() {
         Data p = new Data("hola!🚗", "1");
-        Data p2 = new Data("goodbye.🐱", "1");
+        Data p2 = new Data("ola 🥇", "1");
 
 
         Flux<io.rsocket.Payload> result = sut.router(
